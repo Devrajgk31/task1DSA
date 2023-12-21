@@ -1,0 +1,158 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+
+class Complaint {
+    private String complaintId;
+    private String serviceNumber;
+    private String address;
+    private String contactNumber;
+    private boolean resolved;
+
+    public Complaint(String complaintId, String serviceNumber, String address, String contactNumber) {
+        this.complaintId = complaintId;
+        this.serviceNumber = serviceNumber;
+        this.address = address;
+        this.contactNumber = contactNumber;
+        this.resolved = false;          // Initially, complaint is unresolved
+    }
+
+    // Getters and setters for complaint details
+    public String getComplaintId() {
+        return complaintId;
+    }
+
+    public String getServiceNumber() {
+        return serviceNumber;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public boolean isResolved() {
+        return resolved;
+    }
+
+    public void markResolved() {
+        this.resolved = true;
+    }
+}
+
+class ComplaintManager {
+    private Map<String, Complaint> complaints;
+
+    public ComplaintManager() {
+        complaints = new HashMap<>();
+    }
+
+    public void addComplaint(String complaintId, String serviceNumber, String address, String contactNumber) {
+        if (!complaints.containsKey(complaintId))  //check complaint is exist or not exist
+        {
+            
+            Complaint newComplaint = new Complaint(complaintId, serviceNumber, address, contactNumber);
+            complaints.put(complaintId, newComplaint);
+
+            if (complaints.size() > 5)
+            {
+                sendMessageToSuperintendent();
+            }
+        } else {
+            System.out.println("Complaint ID already exists.");
+        }
+    }
+
+      //method to search compliant 
+      
+    public Complaint searchComplaint(String complaintId) {
+        return complaints.get(complaintId);
+    }
+
+    public void displayAllComplaints() {
+        System.out.println("All Complaints:");
+        for (Complaint complaint : complaints.values()) {
+            System.out.println(complaint.getComplaintId() + " - " + "Service Number: " + complaint.getServiceNumber() +
+                    ", Address: " + complaint.getAddress() + ", Contact Number: " + complaint.getContactNumber());
+        }
+    }
+
+
+    //remove resolvedcomplaint
+    
+    
+    public void removeResolvedComplaint(String complaintId) {
+        Complaint complaint = complaints.get(complaintId);
+        if (complaint != null && complaint.isResolved()) 
+        {
+           
+            complaints.remove(complaintId);
+            System.out.println("Complaint ID: " + complaintId + " has been removed.");
+        }
+    }
+
+    private void sendMessageToSuperintendent()
+    {
+       
+        
+        System.out.println("Sending message to the superintendent: More than 5 complaints");
+    }
+}
+
+public class Main {
+    public static void main(String[] args)
+    {
+        ComplaintManager complaintManager = new ComplaintManager();
+        Scanner sc=new Scanner(System.in);
+        
+        
+        
+        for (int i = 1; i <= 6; i++) {
+            System.out.println("Enter details for complaint " + i + ":");
+            String id = "C" + i;
+            
+            System.out.print("Description: ");
+            String description = sc.nextLine();
+            
+            System.out.print("Address: ");
+            String address = sc.nextLine();
+            
+            System.out.print("Phone: ");
+            String phone = sc.nextLine();
+
+            
+            complaintManager.addComplaint(id, description, address, phone);
+        }
+
+        // Displaying all complaints
+        
+        complaintManager.displayAllComplaints();
+
+        // Searching for a complaint
+            
+           System.out.println("enter the search complaint ID");
+           String SearchID=sc.nextLine();
+        Complaint searchResult = complaintManager.searchComplaint(SearchID);
+        if (searchResult != null)
+        {
+            System.out.println("Found Complaint: " + searchResult.getComplaintId());
+        } else 
+        {
+            System.out.println("Complaint not found!");
+        }
+
+        // Marking a complaint as resolved and removing it
+        complaintManager.searchComplaint(SearchID).markResolved();
+
+        System.out.println(SearchID+"  is resolved");
+
+        complaintManager.removeResolvedComplaint(SearchID);
+        
+        complaintManager.displayAllComplaints();
+    }
+}
