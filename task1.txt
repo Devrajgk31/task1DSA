@@ -1,0 +1,127 @@
+import java.util.*;
+
+class Product {
+    private String productId;
+    private String productName;
+    private double price;
+   
+
+    public Product(String productId, String productName, double price) {
+        this.productId = productId;
+        this.productName = productName;
+        this.price = price;
+       
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    
+}
+
+// Inventory class to manage products
+class Inventory 
+{
+    private Map<String, Product> products; // Using Map to store products with unique ID
+
+    public Inventory() {
+        products = new HashMap<>();
+    }
+
+    // add a new product to inventory
+    public void addProduct(String productId, String productName, double price) {
+        Product newProduct = new Product(productId, productName, price);
+        products.put(productId, newProduct);
+    }
+
+    //  remove defective products from inventory
+    public void removeDefectiveProduct(String productId) {
+        products.remove(productId);
+    }
+
+    //search for a product by its unique ID
+    public Product searchProduct(String productId) {
+        return products.get(productId);
+    }
+
+    //  display all products in the inventory
+    public void displayAllProducts() {
+        for (Map.Entry<String, Product> entry : products.entrySet()) {
+            System.out.println("Product ID: " + entry.getKey() + ", Product Name: " + entry.getValue().getProductName()+" ,Product Prize:"+entry.getValue().getPrice());
+        }
+    }
+
+    // Method to monitor inventory and alert the manager if quantity reaches 5
+    public void monitorInventory() {
+        for (Map.Entry<String, Product> entry : products.entrySet()) {
+            if (entry.getValue() instanceof Product) {
+        
+                if (products.size() <=5) {
+                    System.out.println("Alert: Product quantity for ID " + entry.getKey() + " is low");
+                    
+                }
+            }
+        }
+    }
+}
+
+
+public class Main {
+    public static void main(String[] args) {
+        Inventory superBazaarInventory = new Inventory();
+         Scanner sc=new Scanner(System.in);
+        // Adding products to inventory
+  
+        
+        for (int i = 1; i <= 3; i++) {
+            System.out.println("Enter details for product " + i + ":");
+            String id = "D" + String.format("%02d", i);
+
+            System.out.print("Product name: ");
+            String name = sc.nextLine();
+
+            System.out.print("Price: ");
+            double price = Double.parseDouble(sc.nextLine());
+
+        
+            superBazaarInventory.addProduct(id, name, price);
+        }
+
+        // Displaying all products
+        System.out.println("All Products:");
+        superBazaarInventory.displayAllProducts();
+
+        // Searching for a product using its unique ID
+        System.out.println("enter the seaching item");
+        String searchProductId=sc.nextLine();
+        
+        Product searchedProduct = superBazaarInventory.searchProduct(searchProductId);
+        if (searchedProduct != null) {
+            System.out.println("\nProduct found:");
+            System.out.println("Product ID: " + searchedProduct.getProductId() + ", Product Name: " + searchedProduct.getProductName());
+        } else {
+            System.out.println("\nProduct with ID " + searchProductId + " not found.");
+        }
+        
+        //REMOVE DEFECTIVE item
+        System.out.println("choose defective item remove from inventory");
+        String productId=sc.nextLine();
+        superBazaarInventory.removeDefectiveProduct(productId);
+        System.out.println("removed succes");
+        superBazaarInventory.displayAllProducts();
+        
+
+        // Monitoring inventory
+        superBazaarInventory.monitorInventory();
+    }
+}
+
